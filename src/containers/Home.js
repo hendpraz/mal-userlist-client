@@ -1,61 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { PageHeader, Table, Button } from "react-bootstrap";
 import { onError } from "../libs/errorLib";
 import "./Home.css";
-import { API } from "aws-amplify";
 
 export default function Home() {
-  const limit = 50;
   const [animeList, setAnimeList] = useState([]);
   const [userList, setUserList] = useState([]);
+  const [userInput, setUserInput] = useState("");
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    async function onLoad() {
-      function loadAnimes() {
-        return API.get("maldataapi", `/anime-stats`);
-      }
-  
-      try {
-        setUserList(["Amerph", "baldheart", "DuaKelinci",  "hendpraz", "Qoqom" ])
+  function loadAnimes() {
+    
+  }
 
-        const myAnimeList = await loadAnimes();
-        setAnimeList(myAnimeList);
-      } catch (e) {
-        onError(e);
-      }
+  function handleSubmitUsername(event) {
+    event.preventDefault();
+    try {
+      let arr = s.split(",").map(function(item) { return item.trim(); });
+      setUserList(arr);
+
+      const myAnimeList = await loadAnimes(arr);
+      setAnimeList(myAnimeList);
+    } catch (e) {
+      onError(e);
     }
-  
-    onLoad();
-  }, []);
+  }
 
   function renderAnimeList(animeList) {
     let x = [{}].concat(animeList).map((anime, i) =>
       i !== 0 &&
         <tr>
           <td>
-            {i + ((page - 1) * limit)}
+            {i}
           </td>
           <td>
             {anime.anime_title}
           </td>
+          {() => {
+            
+          }}
           <td>
-            {anime.user_rates[userList[0]]}
+            {anime.rates[userList[0]]}
           </td>
           <td>
-            {anime.user_rates[userList[1]]}
+            {anime.rates[userList[1]]}
           </td>
           <td>
-            {anime.user_rates[userList[2]]}
+            {anime.rates[userList[2]]}
           </td>
           <td>
-            {anime.user_rates[userList[3]]}
+            {anime.rates[userList[3]]}
           </td>
           <td>
-            {anime.user_rates[userList[4]]}
+            {anime.rates[userList[4]]}
           </td>
           <td>
-            {anime.average_score.toFixed(2)}
+            {() => {
+              avg = 0;
+              n = 0;
+
+              for (key in anime.rates) {
+                avg += anime.rates[key];
+                n += 1;
+              }
+              avg /= n;
+              return avg.toFixed(2)
+            }}
           </td>
         </tr>
     );
@@ -70,33 +80,6 @@ export default function Home() {
     );
     x.shift();
     return x;
-  }
-
-  function loadAnimes(animePage){
-    let url = `/anime-stats`;
-    if (animePage > 1) {
-      url += `?page=${animePage}`;
-    }
-    return API.get("maldataapi", url);
-  }
-
-  async function handleNextAnime(event) {
-    event.preventDefault();
-    if (animeList.length >= limit) {
-      const myAnimeList = await loadAnimes(page + 1);
-      setAnimeList(myAnimeList);
-      setPage(page + 1);
-    }
-  }
-
-  async function handlePrevAnime(event) {
-    event.preventDefault();
-
-    if (page > 1) {
-      const myAnimeList = await loadAnimes(page - 1);
-      setAnimeList(myAnimeList);
-      setPage(page - 1);
-    }
   }
 
   return (

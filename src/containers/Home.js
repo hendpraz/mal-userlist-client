@@ -12,7 +12,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   function loadAnimes(arr) {
-    const baseUrl = "http://flask-env-4.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
+    const baseUrl = "https://cors-anywhere.herokuapp.com/http://flask-env-4.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
     const path = "/anime-stats";
     return axios({
       method: 'post',

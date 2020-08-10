@@ -91,7 +91,29 @@ export default function Home() {
       setUserList(arr);
 
       const myAnimeList = await loadAnimes(arr);
-      setAnimeList(myAnimeList.data);
+
+      let tempArr = [];
+      let temp = myAnimeList.data;
+      for (let key in temp) {
+        tempArr.push(temp[key]);
+      }
+
+      tempArr.sort(function(a, b) {
+        return (a["anime_title"] > b["anime_title"]) ? 1 : ((a["anime_title"] < b["anime_title"]) ? -1 : 0);
+      });
+
+      console.log(tempArr);
+
+      let tempJson = {};
+      let n = 0;
+      tempArr.forEach(element => {
+        tempJson[`${n}`] = element;
+        n += 1;
+      });
+
+      console.log(tempJson);
+
+      setAnimeList(tempJson);
     } catch (e) {
       onError(e);
     }

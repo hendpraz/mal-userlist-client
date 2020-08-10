@@ -35,11 +35,13 @@ export default function Home() {
     return avg.toFixed(2);
   }
 
-  function renderRatings(anime) {
+  function renderRatings(anime, i) {
     let arr = [];
+    let j = 1;
     for (let key in userList) {
       const y = anime.rates[userList[key]] || '-';
-      arr.push(<td>{y}</td>);
+      arr.push(<td key={`row-num-${i}-${j}`}>{y}</td>);
+      j += 1;
     }
     let x = [{}].concat(arr);
     x.shift();
@@ -52,15 +54,15 @@ export default function Home() {
     for (let key in animeList) {
       const anime = animeList[key];
       i += 1;
-      arr.push(<tr key={`row${i}`}>
-                  <td>
+      arr.push(<tr key={`row-num-${i}`}>
+                  <td key={`row-num-${i}-1st`}>
                     {i}
                   </td>
-                  <td>
+                  <td key={`row-num-${i}-2nd`}>
                     {anime.anime_title}
                   </td>
-                  {renderRatings(anime)}
-                  <td>
+                  {renderRatings(anime, i)}
+                  <td key={`row-num-${i}-last`}>
                   {renderAverage(anime)}
                   </td>
                 </tr>);
@@ -83,6 +85,31 @@ export default function Home() {
     return userInput.length > 0;
   }
 
+  function sortAnime(data, prop, asc) {
+    let tempArr = [];
+    let temp = data;
+    for (let key in temp) {
+      tempArr.push(temp[key]);
+    }
+
+    tempArr.sort(function(a, b) {
+      if (asc) {
+        return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+      } else {
+          return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+      }
+    });
+
+    let tempJson = {};
+    let n = 0;
+    tempArr.forEach(element => {
+      tempJson[`${n}`] = element;
+      n += 1;
+    });
+
+    return tempJson;
+  }
+
   async function handleQuerySubmit(event) {
     event.preventDefault();
     try {
@@ -91,28 +118,7 @@ export default function Home() {
       setUserList(arr);
 
       const myAnimeList = await loadAnimes(arr);
-
-      let tempArr = [];
-      let temp = myAnimeList.data;
-      for (let key in temp) {
-        tempArr.push(temp[key]);
-      }
-
-      tempArr.sort(function(a, b) {
-        return (a["anime_title"] > b["anime_title"]) ? 1 : ((a["anime_title"] < b["anime_title"]) ? -1 : 0);
-      });
-
-      console.log(tempArr);
-
-      let tempJson = {};
-      let n = 0;
-      tempArr.forEach(element => {
-        tempJson[`${n}`] = element;
-        n += 1;
-      });
-
-      console.log(tempJson);
-
+      const tempJson = sortAnime(myAnimeList.data, "anime_title", true);
       setAnimeList(tempJson);
     } catch (e) {
       onError(e);

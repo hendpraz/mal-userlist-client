@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageHeader, FormGroup, FormControl, Table, ControlLabel } from "react-bootstrap";
+import { PageHeader, FormGroup, FormControl, Table, ControlLabel, Button } from "react-bootstrap";
 import { onError } from "../libs/errorLib";
 import "./Home.css";
 import axios from 'axios';
@@ -10,6 +10,7 @@ export default function Home() {
   const [userList, setUserList] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sortKey, setSortKey] = useState("mostwatched");
 
   function loadAnimes(arr) {
     const baseUrl = "https://cors-anywhere.herokuapp.com/http://flask-env-4.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
@@ -85,20 +86,28 @@ export default function Home() {
     return userInput.length > 0;
   }
 
-  function sortAnime(data, prop, asc) {
+  function sortAnime(data, prop, asc, mostWatched = false) {
     let tempArr = [];
     let temp = data;
     for (let key in temp) {
       tempArr.push(temp[key]);
     }
 
-    tempArr.sort(function(a, b) {
-      if (asc) {
-        return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
-      } else {
-          return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
-      }
-    });
+    if (mostWatched) {
+      tempArr.sort(function(a, b) {
+        const tempA = Object.keys(a["rates"]).length;
+        const tempB = Object.keys(b["rates"]).length;
+        return (tempB > tempA) ? 1 : ((tempB < tempA) ? -1 : 0);
+      });
+    } else {
+      tempArr.sort(function(a, b) {
+        if (asc) {
+          return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+        } else {
+            return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+        }
+      });
+    }
 
     let tempJson = {};
     let n = 0;
@@ -118,12 +127,27 @@ export default function Home() {
       setUserList(arr);
 
       const myAnimeList = await loadAnimes(arr);
-      const tempJson = sortAnime(myAnimeList.data, "anime_title", true);
+      // const tempJson = sortAnime(myAnimeList.data, "anime_title", true);
+      const tempJson = sortAnime(myAnimeList.data, "", true, true);
       setAnimeList(tempJson);
     } catch (e) {
       onError(e);
     }
     setIsLoading(false);
+  }
+
+  function handleSortTitle(event) {
+    event.preventDefault();
+    const tempJson = sortAnime(animeList, "anime_title", true);
+    setAnimeList(tempJson);
+    setSortKey("title");
+  }
+
+  function handleSortMostWatched(event) {
+    event.preventDefault()
+    const tempJson = sortAnime(animeList, "", true, true);
+    setAnimeList(tempJson);
+    setSortKey("mostwatched");
   }
 
   return (
@@ -139,16 +163,38 @@ export default function Home() {
             placeholder="Example: username1, username2, username3"
           />
         </FormGroup>
-          <LoaderButton
-            block
-            type="submit"
-            bsSize="large"
-            isLoading={isLoading}
-            disabled={!validateQueryForm()}
-            onClick={handleQuerySubmit}
-          >
-            Submit Username
-          </LoaderButton>
+        <LoaderButton
+          block
+          type="submit"
+          bsSize="large"
+          isLoading={isLoading}
+          disabled={!validateQueryForm()}
+          onClick={handleQuerySubmit}
+        >
+          Submit Username
+        </LoaderButton>
+        {
+          animeList &&
+          <FormGroup>
+            <ControlLabel id='sort'>Sort By </ControlLabel><br />
+            <Button
+              name='title' 
+              onClick={handleSortTitle}
+              checked={false}
+              disabled={sortKey === "title"}
+              >
+                Title
+            </Button>{' '}
+            <Button
+              name='mostwatched' 
+              onClick={handleSortMostWatched}
+              disabled={sortKey === "mostwatched"}
+              >
+                Most Watched
+            </Button>{' '}
+          </FormGroup>
+        }
+
         <Table>
           <thead>
             <tr>

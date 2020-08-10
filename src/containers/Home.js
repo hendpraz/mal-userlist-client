@@ -106,7 +106,7 @@ export default function Home() {
           <ControlLabel>Usernames, separate with commas</ControlLabel>
           <FormControl
             autoFocus
-            type="tel"
+            type="text"
             onChange={e => setUserInput(e.target.value)}
             placeholder="Example: username1, username2, username3"
           />

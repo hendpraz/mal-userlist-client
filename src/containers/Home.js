@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PageHeader, FormGroup, FormControl, Table, ControlLabel, Button } from "react-bootstrap";
+import { PageHeader, FormGroup, FormControl, Table, ControlLabel, Button, Grid, Row, Col } from "react-bootstrap";
 import { onError } from "../libs/errorLib";
 import "./Home.css";
 import axios from 'axios';
@@ -153,26 +153,33 @@ export default function Home() {
   return (
     <div className="Home">
       <div className="animes">
-        <PageHeader>Anime User Ratings</PageHeader>
-        <FormGroup controlId="query" bsSize="large">
-          <ControlLabel>Usernames, separate with commas</ControlLabel>
-          <FormControl
-            autoFocus
-            type="text"
-            onChange={e => setUserInput(e.target.value)}
-            placeholder="Example: username1, username2, username3"
-          />
-        </FormGroup>
-        <LoaderButton
-          block
-          type="submit"
-          bsSize="large"
-          isLoading={isLoading}
-          disabled={!validateQueryForm()}
-          onClick={handleQuerySubmit}
-        >
-          Submit Username
-        </LoaderButton>
+        <PageHeader>Anime User Ratings Comparison</PageHeader>
+        <Grid>
+          <Row>
+            <Col sm={12} md={9} xs={12}>
+            <FormGroup controlId="query" bsSize="large">
+              <FormControl
+                autoFocus
+                type="text"
+                onChange={e => setUserInput(e.target.value)}
+                placeholder="username1, username2, username3"
+              />
+            </FormGroup>
+            </Col>
+            <Col sm={12} md={3} xs={12}>
+            <LoaderButton
+              block
+              type="submit"
+              bsSize="large"
+              isLoading={isLoading}
+              disabled={!validateQueryForm()}
+              onClick={handleQuerySubmit}
+            >
+              Submit Username
+            </LoaderButton>
+            </Col>
+          </Row>
+        </Grid>
         {
           animeList &&
           <FormGroup>

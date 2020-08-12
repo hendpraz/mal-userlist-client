@@ -22,12 +22,14 @@ function Home(props) {
       try {
         setIsLoading(true);
         let query = props.location.search;
-        query = query.split("=");
-        query.shift();
-        setUserInput(query[0]);
-
-        let arr = query[0].split(",").map(function(item) { return item.trim(); });
-        setUserList(arr);
+        if (query) {
+          query = query.split("=");
+          query.shift();
+          setUserInput(query[0]);
+  
+          let arr = query[0].split(",").map(function(item) { return item.trim(); });
+          setUserList(arr);
+        }
       } catch (e) {
         onError(e);
       }

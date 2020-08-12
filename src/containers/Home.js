@@ -1,16 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageHeader, FormGroup, FormControl, Table, ControlLabel, Button, Grid, Row, Col } from "react-bootstrap";
 import { onError } from "../libs/errorLib";
 import "./Home.css";
 import axios from 'axios';
 import LoaderButton from "../components/LoaderButton";
+import { useHistory } from "react-router-dom";
+import { withRouter } from "react-router";
 
-export default function Home() {
+function Home(props) {
+  const history = useHistory();
   const [animeList, setAnimeList] = useState(null);
   const [userList, setUserList] = useState([]);
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [sortKey, setSortKey] = useState("mostwatched");
+
+  useEffect(() => {
+
+
+    async function onLoad() {
+      try {
+        setIsLoading(true);
+        let query = props.location.search;
+        query = query.split("=");
+        query.shift();
+        setUserInput(query[0]);
+
+        let arr = query[0].split(",").map(function(item) { return item.trim(); });
+        setUserList(arr);
+      } catch (e) {
+        onError(e);
+      }
+      setIsLoading(false);
+    }
+    
+    onLoad();
+  }, [props]);
 
   function loadAnimes(arr) {
     const baseUrl = "https://cors-anywhere.herokuapp.com/http://flask-env-4.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
@@ -130,6 +155,8 @@ export default function Home() {
       // const tempJson = sortAnime(myAnimeList.data, "anime_title", true);
       const tempJson = sortAnime(myAnimeList.data, "", true, true);
       setAnimeList(tempJson);
+
+      history.push(`/?input=${arr.join(",")}`);
     } catch (e) {
       onError(e);
     }
@@ -162,6 +189,7 @@ export default function Home() {
                 autoFocus
                 type="text"
                 onChange={e => setUserInput(e.target.value)}
+                value={userInput}
                 placeholder="username1, username2, username3"
               />
             </FormGroup>
@@ -220,3 +248,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withRouter(Home);

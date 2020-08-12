@@ -22,3 +22,7 @@ Url: https://mal-userlist.netlify.app/
 1. Sort by Anime Title or Sort by Most Watched Animes
 2. Average Ratings of Users
 3. Shareable link (link changes as user input changes)
+
+## Notes
+
+- Request to the backend may takes time around 5 seconds because using 3rd party feature. For future update, the backend API should be deployed within SSL certificate so client can directly access backend without 3rd party.

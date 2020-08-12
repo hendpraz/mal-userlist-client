@@ -15,6 +15,8 @@ This application made for comparing anime ratings of MyAnimeList user by inputin
 
 ![Demo](pic/appgif.gif)
 
+Url: https://mal-userlist.netlify.app/
+
 ## Features
 
 1. Sort by Anime Title or Sort by Most Watched Animes

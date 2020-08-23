@@ -19,7 +19,6 @@ function Home(props) {
     async function onLoad() {
       try {
         setIsLoading(true);
-        setAnimeList(null);
         let query = props.location.search;
         if (query) {
           query = query.split("=");

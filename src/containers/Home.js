@@ -16,8 +16,6 @@ function Home(props) {
   const [sortKey, setSortKey] = useState("mostwatched");
 
   useEffect(() => {
-
-
     async function onLoad() {
       try {
         setIsLoading(true);

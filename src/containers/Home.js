@@ -38,11 +38,12 @@ function Home(props) {
   }, [props]);
 
   function loadAnimes(arr) {
-    const baseUrl = "https://cors-anywhere.herokuapp.com/http://flask-env-4.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
+    const baseUrl = "https://cors-anywhere.herokuapp.com/";
+    const apiUrl = "http://mal-api-v1-05.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
     const path = "/anime-stats";
     return axios({
       method: 'post',
-      url: `${baseUrl+path}`,
+      url: `${baseUrl+apiUrl+path}`,
       data: {
         username_list: arr
       }

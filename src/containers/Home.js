@@ -39,7 +39,7 @@ function Home(props) {
 
   function loadAnimes(arr) {
     const baseUrl = "https://cors-anywhere.herokuapp.com/";
-    const apiUrl = "http://mal-api-v1-05.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
+    const apiUrl = "http://mal-api-v1-06.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
     const path = "/anime-stats";
     return axios({
       method: 'post',
@@ -48,18 +48,6 @@ function Home(props) {
         username_list: arr
       }
     });
-  }
-
-  function renderAverage(anime) {
-    let avg = 0;
-    let n = 0;
-
-    for (let key in anime.rates) {
-      avg += anime.rates[key];
-      n += 1;
-    }
-    avg /= n;
-    return avg.toFixed(2);
   }
 
   function renderRatings(anime, i) {
@@ -90,7 +78,7 @@ function Home(props) {
                   </td>
                   {renderRatings(anime, i)}
                   <td key={`row-num-${i}-last`}>
-                  {renderAverage(anime)}
+                    {anime.avg.toFixed(2)}
                   </td>
                 </tr>);
     }
@@ -153,10 +141,11 @@ function Home(props) {
       setUserList(arr);
 
       const myAnimeList = await loadAnimes(arr);
-      // const tempJson = sortAnime(myAnimeList.data, "anime_title", true);
-      const tempJson = sortAnime(myAnimeList.data, "", true, true);
+      // Sort by Most Watched + Title
+      let tempJson = sortAnime(myAnimeList.data, "anime_title", true);
+      tempJson = sortAnime(tempJson, "", true, true);
       setAnimeList(tempJson);
-
+      setSortKey("mwtitle");
       history.push(`/?input=${arr.join(",")}`);
     } catch (e) {
       onError(e);
@@ -171,11 +160,27 @@ function Home(props) {
     setSortKey("title");
   }
 
-  function handleSortMostWatched(event) {
-    event.preventDefault()
-    const tempJson = sortAnime(animeList, "", true, true);
+  function handleSortAverage(event) {
+    event.preventDefault();
+    const tempJson = sortAnime(animeList, "avg", false);
     setAnimeList(tempJson);
-    setSortKey("mostwatched");
+    setSortKey("highavg");
+  }
+
+  function handleSortMWAvg(event) {
+    event.preventDefault();
+    let tempJson = sortAnime(animeList, "avg", false);
+    tempJson = sortAnime(tempJson, "", true, true);
+    setAnimeList(tempJson);
+    setSortKey("mwavg");
+  }
+
+  function handleSortMWTitle(event) {
+    event.preventDefault()
+    let tempJson = sortAnime(animeList, "anime_title", true);
+    tempJson = sortAnime(tempJson, "", true, true);
+    setAnimeList(tempJson);
+    setSortKey("mwtitle");
   }
 
   return (
@@ -223,10 +228,24 @@ function Home(props) {
             </Button>{' '}
             <Button
               name='mostwatched' 
-              onClick={handleSortMostWatched}
-              disabled={sortKey === "mostwatched"}
+              onClick={handleSortMWTitle}
+              disabled={sortKey === "mwtitle"}
               >
-                Most Watched
+                Most Watched + Title
+            </Button>{' '}
+            <Button
+              name='mostwatched' 
+              onClick={handleSortMWAvg}
+              disabled={sortKey === "mwavg"}
+              >
+                Most Watched + Score
+            </Button>{' '}
+            <Button
+              name='mostwatched' 
+              onClick={handleSortAverage}
+              disabled={sortKey === "highavg"}
+              >
+                Highest Score
             </Button>{' '}
           </FormGroup>
         }

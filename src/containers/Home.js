@@ -141,11 +141,11 @@ function Home(props) {
       setUserList(arr);
 
       const myAnimeList = await loadAnimes(arr);
-      // Sort by Most Watched + Title
-      let tempJson = sortAnime(myAnimeList.data, "anime_title", true);
+      // Sort by Most Watched + Rating
+      let tempJson = sortAnime(myAnimeList.data, "avg", false);
       tempJson = sortAnime(tempJson, "", true, true);
       setAnimeList(tempJson);
-      setSortKey("mwtitle");
+      setSortKey("mwavg");
       history.push(`/?input=${arr.join(",")}`);
     } catch (e) {
       onError(e);

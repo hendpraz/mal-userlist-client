@@ -54,7 +54,7 @@ function Home(props) {
     // const apiUrl = "http://mal-api-v1-06.eba-hgbzmtmf.ap-southeast-1.elasticbeanstalk.com";
 
     const apiUrl =
-      "https://etq478rc1c.execute-api.ap-southeast-1.amazonaws.com";
+      "https://9iughv024e.execute-api.ap-southeast-1.amazonaws.com";
     const path = "/anime-stats";
     return axios({
       method: "post",

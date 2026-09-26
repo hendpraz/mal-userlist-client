@@ -510,7 +510,12 @@ function Home() {
                       <td><span className="title-mark">{anime.anime_title.slice(0, 1)}</span><strong>{anime.anime_title}</strong></td>
                       {usernames.map((user) => {
                         const score = getScore(anime, user);
-                        return <td key={user}><span className={Number(score) >= 8 ? "score score--high" : "score"}>{Number(score) > 0 ? score : "—"}</span></td>;
+                        const scoreClass = Number(score) >= 8
+                          ? "score score--high"
+                          : Number(score) > 0 && Number(score) <= 4
+                          ? "score score--low"
+                          : "score";
+                        return <td key={user}><span className={scoreClass}>{Number(score) > 0 ? score : "—"}</span></td>;
                       })}
                       <td><strong className="average-score">{Number(anime.avg).toFixed(1)}</strong></td>
                     </tr>

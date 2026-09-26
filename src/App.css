@@ -2,7 +2,7 @@
 .app-header { position: relative; z-index: 20; height: 70px; padding: 0 5vw; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; background: #f3f0e8; border-bottom: 1px solid rgba(23,23,19,.17); }
 .app-logo { color: #171713; font-family: "Syne", sans-serif; font-size: 16px; font-weight: 850; letter-spacing: .08em; text-decoration: none; }.app-logo:hover, .app-logo:focus { color: #171713; text-decoration: none; }.app-logo span { color: #ff6b44; }
 .app-header nav { display: flex; gap: 35px; }
-.app-header nav a, .header-cta { color: #171713; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+.app-header nav a, .header-cta { color: #171713; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
 .app-header nav a:hover { color: #6858e9; text-decoration: none; }
 .header-cta { justify-self: end; padding-bottom: 5px; border-bottom: 1px solid #171713; }.header-cta span { margin-left: 7px; }
 @media (max-width: 650px) { .app-header { height: 61px; padding: 0 18px; grid-template-columns: 1fr auto; }.app-header nav { display: none; }.header-cta { font-size: 9px; } }

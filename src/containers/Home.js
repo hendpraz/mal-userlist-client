@@ -294,7 +294,7 @@ function Home() {
       if (!data.length) throw new Error("No public anime entries were found for those users.");
       setAnimes(data);
       setSortKey("popular");
-      history.push(`/?input=${encodeURIComponent(users.join(","))}`);
+      history.push(`/?input=${users.map(encodeURIComponent).join(",")}`);
       if (openModal && users.length > 1) setShowDiscoveries(true);
     } catch (requestError) {
       onError(requestError);
@@ -309,7 +309,7 @@ function Home() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const queryUsers = parseUsernames(params.get("input") || "").slice(0, MAX_USERS);
+    const queryUsers = mergeUsernames(parseUsernames(params.get("input") || ""), []);
     if (queryUsers.length) {
       setUsernames(queryUsers);
       fetchAnimes(queryUsers, false);

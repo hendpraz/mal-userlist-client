@@ -321,7 +321,7 @@ function Home() {
   const sortedAnimes = useMemo(() => {
     const list = [...animes];
     if (sortKey === "title") {
-      return list.sort((a, b) => a.anime_title.localeCompare(b.anime_title));
+      return list.sort((a, b) => String(a.anime_title).localeCompare(String(b.anime_title)));
     }
     if (sortKey === "highest") return list.sort((a, b) => b.avg - a.avg);
     if (sortKey === "divisive") {
@@ -507,7 +507,7 @@ function Home() {
                   {sortedAnimes.map((anime, index) => (
                     <tr key={`${anime.anime_title}-${index}`}>
                       <td>{String(index + 1).padStart(2, "0")}</td>
-                      <td><span className="title-mark">{anime.anime_title.slice(0, 1)}</span><strong>{anime.anime_title}</strong></td>
+                      <td><span className="title-mark">{String(anime.anime_title).slice(0, 1)}</span><strong>{anime.anime_title}</strong></td>
                       {usernames.map((user) => {
                         const score = getScore(anime, user);
                         const scoreClass = Number(score) >= 8
